@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 Created on Tue Apr 28 13:37:23 2020
 @author: Andrew Taylor
 @contributor: Joe Scott
-
 Analyzes my music listening habits based on my downloaded Spotify data and
 albums rankings Excel sheet.
-
 Reference number for conversation with Emil: 4302579312
 The "Escalations Team" handles Spotify data requests that go back farther than 1 year
-
 Things to Add:
     
     Now have info regarding playlists. Each time I add a song to a playlist
@@ -32,8 +30,9 @@ Things to Add:
     
     See on average how many streams/minutes I listen to in one sitting
 """
+
+# import numpy as np
 import xlrd
-import numpy as np
 import matplotlib.pyplot as plt
 import statistics as stats
 import json
@@ -46,7 +45,7 @@ def main():
     global Data  
     global Ratings
     Data, Ratings = GetData()
-    TotalStreamTime(Data, start = "2019-12-01", end = "2020-12-01")
+    # TotalStreamTime(Data)
     # AvgArtistRating(3) #DOESNT WORK RIGHT NOW
     TimeChart(Data)
     # AnimatedChart(Data)
@@ -238,7 +237,8 @@ def TimeChart(dataset):
     #               ylimit = (0, 10), alignment = 'edge')
     # ax.tick_params(axis = 'x', labelrotation = 0, labelsize = 12)
     # ax.set_xticks(list(range(0,25)))
-        
+
+#%%        
 def AvgArtistRating(minAlbums):
     # Calculates and displays the average album score for each artist. Will
     # only plot artists whose number of albums is >= minAlbums
@@ -365,7 +365,7 @@ def AvgArtistRating(minAlbums):
     ax.set_ylim(0,100)
     ax.grid(axis='y')
 
-
+#%%
 def TotalStreamTime(data, start = 1, end = 1):
     # Function that will calculate and graph the total stream time of each artist,
     # album, and song. The variable 'top' determins how many of the top artists
@@ -374,6 +374,8 @@ def TotalStreamTime(data, start = 1, end = 1):
     # in iso format (yyyy-mm-dd)
     # Note: the spotify data counts the song/album/artist name of local files as
     # null. Currently this function just tosses those data values out.
+    global artistList
+    global newList1
     
     artistList = [] # list of all the artists and their stream times (not combined):
     albumList = [] # list of all the albums and their.....
@@ -399,7 +401,7 @@ def TotalStreamTime(data, start = 1, end = 1):
         song = data[i].get("master_metadata_track_name")
         dtime = data[i].get("datetime")
         streamTime = [data[i].get('ms_played') / 3600000] # convert miliseconds to hours
-        if isinstance(song, str) and dtime > d1 and dtime < d2:
+        if isinstance(song, str) and dtime >= d1 and dtime <= d2:
             for n in range(len(artist)): # for albums with multiple artists attribute the stream time to each artist seperately
                 artistList.append([artist[n], streamTime])    
                 if n == 0: # If statement to avoid double counting albums and songs
